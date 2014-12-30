@@ -5,22 +5,12 @@
 td[id*="grid"] {
 	width: 100px;
 	height: 100px;
-	background: #34495E;
+	background: #455a64;
 	vertical-align: middle;
 	text-align: center;
-	color: #F1C40F;
+	color: white;
 	font-size: 55px;
 	font-weight: bolder;
-	animation: 3s slide;
-}
-
-@keyframes slide {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 100;
-	}
 }
 
 #title {

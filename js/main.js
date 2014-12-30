@@ -9,11 +9,28 @@ function Grid(i) {
 }
 Grid.prototype.setValue = function(num) {
 	this.value = num;
-	if (num === 0) {
-		this.dom.innerHTML = '';
-	} else {
-		this.dom.innerHTML = num;
+	switch (num) {
+		case 0:
+			this.dom.innerHTML = '';
+			this.dom.style.backgroundColor= '#34495E';
+			return;
+		case 1: this.dom.style.backgroundColor = "#558b2f"; break;
+		case 2: this.dom.style.backgroundColor = "#4caf50"; break;
+		case 4: this.dom.style.backgroundColor = '#009688'; break;
+		case 8: this.dom.style.backgroundColor = '#0097a7'; break;
+		case 16: this.dom.style.backgroundColor = '#1e88e5'; break;
+		case 32: this.dom.style.backgroundColor = '#3f51b5'; break;
+		case 64: this.dom.style.backgroundColor = '#673ab7'; break;
+		case 128: this.dom.style.backgroundColor = '#827717'; break;
+		case 256: this.dom.style.backgroundColor = '#ef6c00'; break;
+		case 512: this.dom.style.backgroundColor = '#a1887f'; break;
+		case 1024: this.dom.style.backgroundColor = '#e91e63'; break;
+		case 2048: this.dom.style.backgroundColor = '#e53935'; break;
+		case 4096: this.dom.style.backgroundColor = '#263238'; break;
+		case 8192: this.dom.style.backgroundColor = '#424242'; break;
+		case 16386: this.dom.style.backgroundColor = '#000000'; break;
 	}
+	this.dom.innerHTML = num;
 }
 
 function Container(recorder) {
