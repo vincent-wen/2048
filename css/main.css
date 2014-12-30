@@ -1,0 +1,55 @@
+#container table{
+	margin: 20px auto;
+}
+
+td[id*="grid"] {
+	width: 100px;
+	height: 100px;
+	background: #34495E;
+	vertical-align: middle;
+	text-align: center;
+	color: #F1C40F;
+	font-size: 55px;
+	font-weight: bolder;
+	animation: 3s slide;
+}
+
+@keyframes slide {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 100;
+	}
+}
+
+#title {
+	margin: 30px auto;
+	text-align: center;
+	color: #d35400;
+	font-size: 55px;
+	font-weight: bolder;
+	font-style: oblique;
+}
+
+#record {
+	display: inline-block;
+	left: 54%;
+	margin: auto;
+	position: relative;
+	color: #2c3e50;
+}
+
+#control {
+	display: inline-block;
+	left: 34%;
+	margin: auto;
+	position: relative;
+}
+
+#scores {
+	color: #2ecc71;
+}
+#highest {
+	color: #c0392b;
+}
