@@ -87,8 +87,6 @@ Container.prototype.move = function(row) {
 Container.prototype.isFull = function() {
 	for(var i=0; i<this.grids.length; i++) {
 		if (this.grids[i].value === 0) {
-			console.log(this.grids);
-			console.log(i);
 			return false;
 		}
 	}
