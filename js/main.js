@@ -87,10 +87,45 @@ Container.prototype.move = function(row) {
 Container.prototype.isFull = function() {
 	for(var i=0; i<this.grids.length; i++) {
 		if (this.grids[i].value === 0) {
+			console.log(this.grids);
+			console.log(i);
 			return false;
 		}
 	}
 	return true;
+}
+Container.prototype.canMove = function() {
+	// down (means can up too)
+	for(var i=0; i<12; i++) {
+		if (this.grids[i].value === this.grids[i+4].value) {
+			return true;
+		}
+	}
+	// right (means can left too)
+	for(var i=0; i<16; i+=4) {
+		if (this.grids[i].value === this.grids[i+1].value) {
+			return true;
+		}
+		if (this.grids[i+1].value === this.grids[i+2].value) {
+			return true;
+		}
+		if (this.grids[i+2].value === this.grids[i+3].value) {
+			return true;
+		}
+	}
+	return false;
+}
+Container.prototype.hasMoved = function() {
+	if (!localStorage['2048_status']) {
+		return true;
+	}
+	var savedGrids = JSON.parse(atob(localStorage['2048_status']));
+	for(var i=0; i<this.grids.length; i++) {
+		if (savedGrids[i] !== this.grids[i].value) {
+			return true;
+		}
+	}
+	return false;
 }
 Container.prototype.reset = function() {
 	for(var i=0; i<this.grids.length; i++) {
@@ -100,7 +135,7 @@ Container.prototype.reset = function() {
 	this.saveGame();
 	this.recorder.resetScores();
 }
-Container.prototype.saveGame = function() {
+Container.prototype.saveGame = function(check) {
 	var grids = [];
 	for(var i=0; i<this.grids.length; i++) {
 		grids.push(this.grids[i].value);
@@ -131,13 +166,15 @@ EventHandler.prototype.registerEvents = function() {
 			case 37: event.preventDefault(); 	self.leftEvent(); break;
 			default: return;
 		}
-		if (self.container.isFull()) {
-			alert("Game failed!");
-			self.container.reset();
-			return;
+		if (self.container.hasMoved()) {
+			self.container.displayRandomNum();
+			if (self.container.isFull() && !self.container.canMove()) {
+				alert("Game failed!");
+				self.container.reset();
+				return;
+			}
+			self.container.saveGame();
 		}
-		self.container.displayRandomNum();
-		self.container.saveGame();
 	};
 	var resetBtn = document.getElementById("resetBtn");
 	resetBtn.onclick = function(event) {
