@@ -1,11 +1,11 @@
 #container table{
-	margin: 20px auto;
+	margin: 2% auto;
 }
 
 td[id*="grid"] {
 	width: 100px;
 	height: 100px;
-	background: #455a64;
+	background: #34495E;
 	vertical-align: middle;
 	text-align: center;
 	color: white;
@@ -14,7 +14,7 @@ td[id*="grid"] {
 }
 
 #title {
-	margin: 30px auto;
+	margin: 2% auto;
 	text-align: center;
 	color: #d35400;
 	font-size: 55px;

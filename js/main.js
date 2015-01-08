@@ -1,6 +1,6 @@
 window.onload = function() {
 	new Controller().start();
-}
+};
 
 function Grid(i) {
 	this.i = i;
@@ -31,7 +31,7 @@ Grid.prototype.setValue = function(num) {
 		case 16386: this.dom.style.backgroundColor = '#000000'; break;
 	}
 	this.dom.innerHTML = num;
-}
+};
 
 function Container(recorder) {
 	this.grids = [];
@@ -44,11 +44,11 @@ Container.prototype.init = function() {
 	if (!this.loadGame()) {
 		this.displayTwoRandomNums();
 	}
-}
+};
 Container.prototype.displayTwoRandomNums = function() {
 	this.displayRandomNum();
 	this.displayRandomNum();
-}
+};
 Container.prototype.displayRandomNum = function() {
 	var index = Math.floor(Math.random()*16);
 	var num = Math.floor(Math.random()*2) + 1;
@@ -57,19 +57,20 @@ Container.prototype.displayRandomNum = function() {
 	} else {
 		this.displayRandomNum();
 	}
-}
+};
 Container.prototype.removeBlankGrids = function(row) {
-	var stack = [];
 	for(var i=0; i<row.length; i++) {
-		if (row[i] !== 0) {
-			stack.push(row[i]);
-		}
+		if(row[i] !== 0) continue;
+		for(var j=i+1; row[j]===0 && j<row.length; j++) {}
+		if(j === row.length) break;
+		row[i] = row[j];
+		row[j] = 0;
 	}
-	return stack;
-}
+	return row;
+};
 Container.prototype.move = function(row) {
 	row = this.removeBlankGrids(row);
-	
+
 	// merge same grids
 	for(var j=0; j<=2; j++) {
 		if (row[j+1] === undefined) {
@@ -83,7 +84,7 @@ Container.prototype.move = function(row) {
 		}
 	}
 	return row;
-}
+};
 Container.prototype.isFull = function() {
 	for(var i=0; i<this.grids.length; i++) {
 		if (this.grids[i].value === 0) {
@@ -91,7 +92,7 @@ Container.prototype.isFull = function() {
 		}
 	}
 	return true;
-}
+};
 Container.prototype.canMove = function() {
 	// down (means can up too)
 	for(var i=0; i<12; i++) {
@@ -100,7 +101,7 @@ Container.prototype.canMove = function() {
 		}
 	}
 	// right (means can left too)
-	for(var i=0; i<16; i+=4) {
+	for(i=0; i<16; i+=4) {
 		if (this.grids[i].value === this.grids[i+1].value) {
 			return true;
 		}
@@ -112,7 +113,7 @@ Container.prototype.canMove = function() {
 		}
 	}
 	return false;
-}
+};
 Container.prototype.hasMoved = function() {
 	if (!localStorage['2048_status']) {
 		return true;
@@ -124,7 +125,7 @@ Container.prototype.hasMoved = function() {
 		}
 	}
 	return false;
-}
+};
 Container.prototype.reset = function() {
 	for(var i=0; i<this.grids.length; i++) {
 		this.grids[i].setValue(0);
@@ -132,14 +133,14 @@ Container.prototype.reset = function() {
 	this.displayTwoRandomNums();
 	this.saveGame();
 	this.recorder.resetScores();
-}
+};
 Container.prototype.saveGame = function(check) {
 	var grids = [];
 	for(var i=0; i<this.grids.length; i++) {
 		grids.push(this.grids[i].value);
 	}
 	localStorage['2048_status'] = btoa(JSON.stringify(grids));
-}
+};
 Container.prototype.loadGame = function() {
 	if (localStorage['2048_status'] !== undefined) {
 		var grids = JSON.parse(atob(localStorage['2048_status']));
@@ -149,7 +150,7 @@ Container.prototype.loadGame = function() {
 		return true;
 	}
 	return false;
-}
+};
 
 function EventHandler(container) {
 	this.container = container;
@@ -177,8 +178,8 @@ EventHandler.prototype.registerEvents = function() {
 	var resetBtn = document.getElementById("resetBtn");
 	resetBtn.onclick = function(event) {
 		self.container.reset();
-	}
-}
+	};
+};
 EventHandler.prototype.downEvent = function() {
 	for(var i=0; i<=3; i++) {
 		var row = [];
@@ -186,15 +187,15 @@ EventHandler.prototype.downEvent = function() {
 		row[2] = this.container.grids[i+4].value;
 		row[1] = this.container.grids[i+8].value;
 		row[0] = this.container.grids[i+12].value;
-		
+
 		row = this.container.move(row);
-		
+
 		this.container.grids[i].setValue(row[3] ? row[3] : 0);
 		this.container.grids[i+4].setValue(row[2] ? row[2] : 0);
 		this.container.grids[i+8].setValue(row[1] ? row[1] : 0);
 		this.container.grids[i+12].setValue(row[0] ? row[0] : 0);
 	}
-}
+};
 EventHandler.prototype.upEvent = function() {
 	for(var i=0; i<=3; i++) {
 		var row = [];
@@ -202,15 +203,15 @@ EventHandler.prototype.upEvent = function() {
 		row[1] = this.container.grids[i+4].value;
 		row[2] = this.container.grids[i+8].value;
 		row[3] = this.container.grids[i+12].value;
-		
+
 		row = this.container.move(row);
-		
+
 		this.container.grids[i].setValue(row[0] ? row[0] : 0);
 		this.container.grids[i+4].setValue(row[1] ? row[1] : 0);
 		this.container.grids[i+8].setValue(row[2] ? row[2] : 0);
 		this.container.grids[i+12].setValue(row[3] ? row[3] : 0);
 	}
-}
+};
 EventHandler.prototype.rightEvent = function() {
 	for(var i=0; i<=12; i+=4) {
 		var row = [];
@@ -218,15 +219,15 @@ EventHandler.prototype.rightEvent = function() {
 		row[2] = this.container.grids[i+1].value;
 		row[1] = this.container.grids[i+2].value;
 		row[0] = this.container.grids[i+3].value;
-		
+
 		row = this.container.move(row);
-		
+
 		this.container.grids[i].setValue(row[3] ? row[3] : 0);
 		this.container.grids[i+1].setValue(row[2] ? row[2] : 0);
 		this.container.grids[i+2].setValue(row[1] ? row[1] : 0);
 		this.container.grids[i+3].setValue(row[0] ? row[0] : 0);
 	}
-}
+};
 EventHandler.prototype.leftEvent = function() {
 	for(var i=0; i<=12; i+=4) {
 		var row = [];
@@ -234,15 +235,15 @@ EventHandler.prototype.leftEvent = function() {
 		row[1] = this.container.grids[i+1].value;
 		row[2] = this.container.grids[i+2].value;
 		row[3] = this.container.grids[i+3].value;
-		
+
 		row = this.container.move(row);
-		
+
 		this.container.grids[i].setValue(row[0] ? row[0] : 0);
 		this.container.grids[i+1].setValue(row[1] ? row[1] : 0);
 		this.container.grids[i+2].setValue(row[2] ? row[2] : 0);
 		this.container.grids[i+3].setValue(row[3] ? row[3] : 0);
 	}
-}
+};
 
 function Recorder() {
 	this.scores = 0;
@@ -256,15 +257,15 @@ Recorder.prototype.initScores = function() {
 	this.highest = parseInt(localStorage['2048_highest']) || 0;
 	this.scoresDom.innerHTML = this.scores;
 	this.highestDom.innerHTML = this.highest;
-}
+};
 Recorder.prototype.resetScores = function() {
 	this.scores = 0;
 	this.updateRecords();
-}
+};
 Recorder.prototype.addScore = function(score) {
 	this.scores += score;
 	this.updateRecords();
-}
+};
 Recorder.prototype.updateRecords = function() {
 	this.scoresDom.innerHTML = this.scores;
 	if (this.highest < this.scores) {
@@ -273,7 +274,7 @@ Recorder.prototype.updateRecords = function() {
 	}
 	localStorage['2048_scores'] = this.scores;
 	localStorage['2048_highest'] = this.highest;
-}
+};
 
 function Controller() {
 	this.recorder = new Recorder();
@@ -283,4 +284,4 @@ function Controller() {
 Controller.prototype.start = function() {
 	this.container.init();
 	this.eventHandler.registerEvents();
-}
+};
