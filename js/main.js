@@ -66,10 +66,9 @@ Container.prototype.removeBlankGrids = function(row) {
 		row[i] = row[j];
 		row[j] = 0;
 	}
-	return row;
 };
 Container.prototype.move = function(row) {
-	row = this.removeBlankGrids(row);
+	this.removeBlankGrids(row);
 
 	// merge same grids
 	for(var j=0; j<=2; j++) {
@@ -79,11 +78,10 @@ Container.prototype.move = function(row) {
 		if (row[j] === row[j+1]) {
 				row[j] *= 2;
 				row[j+1] = 0;
-				row = this.removeBlankGrids(row);
+				this.removeBlankGrids(row);
 				this.recorder.addScore(row[j]);
 		}
 	}
-	return row;
 };
 Container.prototype.isFull = function() {
 	for(var i=0; i<this.grids.length; i++) {
@@ -172,8 +170,11 @@ EventHandler.prototype.registerEvents = function() {
 				self.container.reset();
 				return;
 			}
-			self.container.saveGame();
 		}
+	};
+	window.onbeforeunload = function() {
+		self.container.saveGame();
+		self.container.recorder.saveRecords();
 	};
 	var resetBtn = document.getElementById("resetBtn");
 	resetBtn.onclick = function(event) {
@@ -188,7 +189,7 @@ EventHandler.prototype.downEvent = function() {
 		row[1] = this.container.grids[i+8].value;
 		row[0] = this.container.grids[i+12].value;
 
-		row = this.container.move(row);
+		this.container.move(row);
 
 		this.container.grids[i].setValue(row[3] ? row[3] : 0);
 		this.container.grids[i+4].setValue(row[2] ? row[2] : 0);
@@ -204,7 +205,7 @@ EventHandler.prototype.upEvent = function() {
 		row[2] = this.container.grids[i+8].value;
 		row[3] = this.container.grids[i+12].value;
 
-		row = this.container.move(row);
+		this.container.move(row);
 
 		this.container.grids[i].setValue(row[0] ? row[0] : 0);
 		this.container.grids[i+4].setValue(row[1] ? row[1] : 0);
@@ -220,7 +221,7 @@ EventHandler.prototype.rightEvent = function() {
 		row[1] = this.container.grids[i+2].value;
 		row[0] = this.container.grids[i+3].value;
 
-		row = this.container.move(row);
+		this.container.move(row);
 
 		this.container.grids[i].setValue(row[3] ? row[3] : 0);
 		this.container.grids[i+1].setValue(row[2] ? row[2] : 0);
@@ -236,7 +237,7 @@ EventHandler.prototype.leftEvent = function() {
 		row[2] = this.container.grids[i+2].value;
 		row[3] = this.container.grids[i+3].value;
 
-		row = this.container.move(row);
+		this.container.move(row);
 
 		this.container.grids[i].setValue(row[0] ? row[0] : 0);
 		this.container.grids[i+1].setValue(row[1] ? row[1] : 0);
@@ -272,9 +273,11 @@ Recorder.prototype.updateRecords = function() {
 		this.highest = this.scores;
 		this.highestDom.innerHTML = this.highest;
 	}
+};
+Recorder.prototype.saveRecords = function() {
 	localStorage['2048_scores'] = this.scores;
 	localStorage['2048_highest'] = this.highest;
-};
+}
 
 function Controller() {
 	this.recorder = new Recorder();
